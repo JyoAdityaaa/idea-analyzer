@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AI SWOT Analyzer</title>
+  <meta charset="UTF-8" />
+  <title>AI Idea Analyzer</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to right, #6dd5ed, #2193b0);
-      color: #333;
       padding: 40px;
       display: flex;
       justify-content: center;
     }
-
     .form-box {
       background: white;
       padding: 30px 40px;
@@ -21,18 +19,15 @@
       width: 100%;
       max-width: 500px;
     }
-
     h2 {
       text-align: center;
       color: #2c3e50;
     }
-
     label {
       font-weight: bold;
       display: block;
       margin-top: 15px;
     }
-
     input, textarea, select {
       width: 100%;
       padding: 10px;
@@ -41,7 +36,6 @@
       border: 1px solid #ccc;
       font-size: 14px;
     }
-
     input[type="submit"] {
       margin-top: 20px;
       background-color: #2193b0;
@@ -50,7 +44,6 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     input[type="submit"]:hover {
       background-color: #1e7e96;
     }
@@ -58,14 +51,13 @@
 </head>
 <body>
   <div class="form-box">
-    <h2>Submit Your Idea</h2>
-
+    <h2>Submit Your AI-Based Idea</h2>
     <form id="ideaForm">
       <label for="name">Name:</label>
-      <input type="text" name="name" required>
+      <input type="text" name="name" required />
 
       <label for="email">Email:</label>
-      <input type="email" name="email" required>
+      <input type="email" name="email" required />
 
       <label for="idea">Your Idea:</label>
       <textarea name="idea" rows="5" required></textarea>
@@ -78,35 +70,34 @@
         <option value="Other">Other</option>
       </select>
 
-      <input type="submit" value="Analyze Idea">
+      <input type="submit" value="Analyze Idea" />
     </form>
   </div>
 
   <script>
-    document.getElementById("ideaForm").addEventListener("submit", function(e) {
-      e.preventDefault(); // Prevent default submission
+    document.getElementById("ideaForm").addEventListener("submit", async function(e) {
+      e.preventDefault(); // Prevent default form submission
 
-      const name = document.querySelector('[name=name]').value;
-      const email = document.querySelector('[name=email]').value;
-      const idea = document.querySelector('[name=idea]').value;
-      const category = document.querySelector('[name=category]').value;
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
 
-      fetch("https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9", { // replace this
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, idea, category })
-      })
-      .then(res => {
-        if (res.ok) {
-          window.location.href = `result.html?email=${encodeURIComponent(email)}`;
-        } else {
-          alert("Submission failed. Please try again.");
-        }
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        alert("Error submitting the form.");
-      });
+      try {
+        // Send to Make webhook
+        await fetch("https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        // After success, redirect with URL params
+        const params = new URLSearchParams(data).toString();
+        window.location.href = "result.html?" + params;
+      } catch (err) {
+        alert("Error submitting form.");
+        console.error(err);
+      }
     });
   </script>
 </body>
