@@ -45,26 +45,17 @@
 </head>
 <body>
   <div class="container" id="swot-result">
-    <h2>Hi <span id="name">User</span>, here is your SWOT Analysis</h2>
-    <p><strong>Idea:</strong> <span id="idea"></span></p>
-    <p><strong>Category:</strong> <span id="category"></span></p>
+    <h2>Your SWOT Analysis Result</h2>
+    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
     <div class="swot" id="swot">Loading SWOT...</div>
     <button class="btn" onclick="downloadPDF()">📥 Download as PDF</button>
   </div>
 
-  <!-- html2pdf.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get("name");
-    const idea = params.get("idea");
-    const category = params.get("category");
-    const email = params.get("email");
-
-    document.getElementById("name").textContent = name || "User";
-    document.getElementById("idea").textContent = idea || "your idea";
-    document.getElementById("category").textContent = category || "N/A";
+    const email = new URLSearchParams(window.location.search).get("email");
+    document.getElementById("email").textContent = email;
 
     const SHEETDB_URL = "https://sheetdb.io/api/v1/kuljjutug58ww";
 
@@ -75,13 +66,13 @@
         document.getElementById("swot").textContent = swot;
       })
       .catch(err => {
+        console.error("Error:", err);
         document.getElementById("swot").textContent = "Error loading SWOT.";
-        console.error(err);
       });
 
     function downloadPDF() {
       const element = document.getElementById("swot-result");
-      html2pdf().from(element).save(`SWOT_${name || 'User'}.pdf`);
+      html2pdf().from(element).save(`SWOT_${email}.pdf`);
     }
   </script>
 </body>
