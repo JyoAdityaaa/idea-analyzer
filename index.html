@@ -59,18 +59,7 @@
 <body>
   <div class="form-box">
     <h2>Submit Your Startup Idea</h2>
-    <form 
-      action="https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9" 
-      method="post"
-      onsubmit="setTimeout(() => {
-        const name = document.querySelector('[name=name]').value;
-        const idea = document.querySelector('[name=idea]').value;
-        const category = document.querySelector('[name=category]').value;
-        window.location.href = 'result.html?name=' + encodeURIComponent(name) + 
-                               '&idea=' + encodeURIComponent(idea) + 
-                               '&category=' + encodeURIComponent(category);
-      }, 2000);"
-    >
+    <form id="ideaForm">
       <label for="name">Name:</label>
       <input type="text" name="name" required>
 
@@ -91,5 +80,36 @@
       <input type="submit" value="Analyze Idea">
     </form>
   </div>
+
+  <script>
+    document.getElementById("ideaForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // prevent form from submitting normally
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      // Send data to Make Webhook
+      fetch("https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9", {
+        method: "POST",
+        body: formData
+      })
+      .then(() => {
+        const name = formData.get("name");
+        const email = formData.get("email");
+        const idea = formData.get("idea");
+        const category = formData.get("category");
+
+        // Redirect to result page after 2 seconds
+        setTimeout(() => {
+          const query = `result.html?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&idea=${encodeURIComponent(idea)}&category=${encodeURIComponent(category)}`;
+          window.location.href = query;
+        }, 2000);
+      })
+      .catch((err) => {
+        alert("Error submitting form.");
+        console.error(err);
+      });
+    });
+  </script>
 </body>
 </html>
