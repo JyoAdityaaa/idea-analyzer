@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>SWOT Result Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -30,14 +31,31 @@
       border-radius: 8px;
       white-space: pre-wrap;
     }
+
+    .download-btn {
+      margin-top: 25px;
+      background-color: #2193b0;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .download-btn:hover {
+      background-color: #1e7e96;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="swot-container">
     <h2>Hi <span id="name">User</span>, here is your SWOT Analysis</h2>
     <p><strong>Idea:</strong> <span id="idea"></span></p>
     <p><strong>Category:</strong> <span id="category"></span></p>
     <div class="swot" id="swot">Loading SWOT...</div>
+
+    <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
   </div>
 
   <script>
@@ -52,22 +70,28 @@
 
     const SHEETDB_URL = "https://sheetdb.io/api/v1/kuljjutug58ww";
 
-    // Only search by name to avoid issues with exact matches on idea text
-    fetch(`${SHEETDB_URL}/search?name=${encodeURIComponent(name)}`)
+    fetch(`${SHEETDB_URL}/search?name=${encodeURIComponent(name)}&idea=${encodeURIComponent(idea)}&category=${encodeURIComponent(category)}`)
       .then(res => res.json())
       .then(data => {
-        if (data.length > 0) {
-          const latestEntry = data[data.length - 1]; // Get most recent match
-          const swot = latestEntry.swot || latestEntry.SWOT || "SWOT not available.";
-          document.getElementById("swot").textContent = swot;
-        } else {
-          document.getElementById("swot").textContent = "No SWOT result found for this name.";
-        }
+        const swot = data[0]?.swot || data[0]?.SWOT || "No SWOT found.";
+        document.getElementById("swot").textContent = swot;
       })
       .catch(err => {
         document.getElementById("swot").textContent = "Error loading SWOT.";
         console.error(err);
       });
+
+    function downloadPDF() {
+      const element = document.getElementById("swot-container");
+      const opt = {
+        margin:       0.5,
+        filename:     `SWOT_${name || 'User'}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
+    }
   </script>
 </body>
 </html>
