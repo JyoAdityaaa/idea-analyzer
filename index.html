@@ -58,43 +58,56 @@
 </head>
 <body>
   <div class="form-box">
-    <h2>Submit Your Idea for SWOT Analysis</h2>
-    <form 
-      action="https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9" 
-      method="post"
-      onsubmit="setTimeout(() => {
-        const name = document.querySelector('[name=name]').value;
-        const email = document.querySelector('[name=email]').value;
-        const idea = document.querySelector('[name=idea]').value;
-        const category = document.querySelector('[name=category]').value;
+    <h2>Submit Your Idea</h2>
 
-        window.location.href = 
-          'result.html?name=' + encodeURIComponent(name) +
-          '&email=' + encodeURIComponent(email) +
-          '&idea=' + encodeURIComponent(idea) +
-          '&category=' + encodeURIComponent(category);
-      }, 2000);"
-    >
-      <label for="name">Your Name:</label>
+    <form id="ideaForm">
+      <label for="name">Name:</label>
       <input type="text" name="name" required>
 
-      <label for="email">Your Email:</label>
+      <label for="email">Email:</label>
       <input type="email" name="email" required>
 
-      <label for="idea">Describe Your Idea:</label>
+      <label for="idea">Your Idea:</label>
       <textarea name="idea" rows="5" required></textarea>
 
       <label for="category">Category:</label>
-      <select name="category" required>
-        <option value="">--Select--</option>
+      <select name="category">
         <option value="EdTech">EdTech</option>
         <option value="FinTech">FinTech</option>
         <option value="HealthTech">HealthTech</option>
         <option value="Other">Other</option>
       </select>
 
-      <input type="submit" value="Analyze My Idea">
+      <input type="submit" value="Analyze Idea">
     </form>
   </div>
+
+  <script>
+    document.getElementById("ideaForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // Prevent default submission
+
+      const name = document.querySelector('[name=name]').value;
+      const email = document.querySelector('[name=email]').value;
+      const idea = document.querySelector('[name=idea]').value;
+      const category = document.querySelector('[name=category]').value;
+
+      fetch("https://hook.us2.make.com/YOUR_WEBHOOK_ID", { // replace this
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, idea, category })
+      })
+      .then(res => {
+        if (res.ok) {
+          window.location.href = `result.html?email=${encodeURIComponent(email)}`;
+        } else {
+          alert("Submission failed. Please try again.");
+        }
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("Error submitting the form.");
+      });
+    });
+  </script>
 </body>
 </html>
