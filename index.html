@@ -1,48 +1,93 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI SWOT Analyzer</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
-      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #6dd5ed, #2193b0);
+      color: #333;
+      padding: 40px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
-      text-align: center;
     }
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 1.2rem;
-      max-width: 600px;
-      margin-bottom: 30px;
-    }
-    a.button {
+
+    .form-box {
       background: white;
-      color: #1e3c72;
-      padding: 15px 30px;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 8px;
-      transition: background 0.3s;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 500px;
     }
-    a.button:hover {
-      background: #f0f0f0;
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    input[type="submit"] {
+      margin-top: 20px;
+      background-color: #2193b0;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #1e7e96;
     }
   </style>
 </head>
 <body>
-  <h1>AI-Powered Idea Analyzer</h1>
-  <p>Get a detailed SWOT analysis for your startup idea in seconds—powered by free AI.</p>
-  <a class="button" href="form.html">Submit Your Idea</a>
+  <div class="form-box">
+    <h2>Submit Your Startup Idea</h2>
+    <form 
+      action="https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9" 
+      method="post"
+      target="_self"
+      onsubmit="setTimeout(() => {
+        const name = document.querySelector('[name=name]').value;
+        const idea = document.querySelector('[name=idea]').value;
+        window.location.href = 'result.html?name=' + encodeURIComponent(name) + '&idea=' + encodeURIComponent(idea);
+      }, 2000);"
+    >
+      <label for="name">Name:</label>
+      <input type="text" name="name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" name="email" required>
+
+      <label for="idea">Your Idea:</label>
+      <textarea name="idea" rows="5" required></textarea>
+
+      <label for="category">Category:</label>
+      <select name="category">
+        <option value="EdTech">EdTech</option>
+        <option value="FinTech">FinTech</option>
+        <option value="HealthTech">HealthTech</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <input type="submit" value="Analyze Idea">
+    </form>
+  </div>
 </body>
 </html>
