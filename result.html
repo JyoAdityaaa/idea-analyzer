@@ -11,15 +11,18 @@
       max-width: 800px;
       margin: auto;
     }
+
     .container {
       background: white;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
+
     h2 {
       color: #2c3e50;
     }
+
     .swot {
       margin-top: 20px;
       background: #eef;
@@ -49,11 +52,17 @@
 
     const SHEETDB_URL = "https://sheetdb.io/api/v1/kuljjutug58ww";
 
-    fetch(`${SHEETDB_URL}/search?name=${encodeURIComponent(name)}&idea=${encodeURIComponent(idea)}&category=${encodeURIComponent(category)}`)
+    // Only search by name to avoid issues with exact matches on idea text
+    fetch(`${SHEETDB_URL}/search?name=${encodeURIComponent(name)}`)
       .then(res => res.json())
       .then(data => {
-        const swot = data[0]?.swot || data[0]?.SWOT || "No SWOT found.";
-        document.getElementById("swot").textContent = swot;
+        if (data.length > 0) {
+          const latestEntry = data[data.length - 1]; // Get most recent match
+          const swot = latestEntry.swot || latestEntry.SWOT || "SWOT not available.";
+          document.getElementById("swot").textContent = swot;
+        } else {
+          document.getElementById("swot").textContent = "No SWOT result found for this name.";
+        }
       })
       .catch(err => {
         document.getElementById("swot").textContent = "Error loading SWOT.";
