@@ -1,23 +1,89 @@
 <!DOCTYPE html>
-<html>
-<head><title>AI SWOT Analyzer Form</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI SWOT Analyzer Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    form {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    input[type="submit"] {
+      background-color: #2193b0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #1e7e96;
+    }
+  </style>
+</head>
 <body>
+
   <h2>Submit Your Startup Idea</h2>
-  <form action="https://hook.us2.make.com/gmyly7xvgpux238oinoum4yixdlki28c" method="post">
-    <label>Name:</label><br>
-    <input name="name" required><br><br>
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
-    <label>Idea:</label><br>
-    <textarea name="idea" rows="6" required></textarea><br><br>
-    <label>Category:</label><br>
+
+  <form 
+    action="https://hook.us2.make.com/gmyly7xvgpux238oinoum4yixdlki28c" 
+    method="post"
+    onsubmit="setTimeout(() => {
+      const name = document.querySelector('[name=name]').value;
+      const idea = document.querySelector('[name=idea]').value;
+      window.location.href = 'result.html?name=' + encodeURIComponent(name) + '&idea=' + encodeURIComponent(idea);
+    }, 2000);"
+  >
+    <label>Name:</label>
+    <input name="name" required>
+
+    <label>Email:</label>
+    <input type="email" name="email" required>
+
+    <label>Idea:</label>
+    <textarea name="idea" rows="6" required></textarea>
+
+    <label>Category:</label>
     <select name="category">
       <option>EdTech</option>
       <option>FinTech</option>
       <option>HealthTech</option>
       <option>Other</option>
-    </select><br><br>
+    </select>
+
     <input type="submit" value="Analyze">
   </form>
+
 </body>
 </html>
