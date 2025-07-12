@@ -2,71 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SWOT Analysis Result</title>
+  <title>SWOT Result Viewer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      padding: 20px;
+      background: #f7fafc;
+      padding: 40px;
       max-width: 800px;
       margin: auto;
     }
-    h2 { color: #2c3e50; }
-    .box {
+
+    .container {
       background: white;
-      padding: 20px;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
-    .loading {
-      font-size: 18px;
-      color: #666;
+
+    h2 {
+      color: #2c3e50;
     }
-    pre {
-      background: #eee;
-      padding: 10px;
+
+    .swot {
+      margin-top: 20px;
+      background: #eef;
+      padding: 15px;
+      border-radius: 8px;
       white-space: pre-wrap;
-      border-radius: 6px;
     }
   </style>
 </head>
 <body>
-  <h2>Hey <span id="username">User</span>, here is your SWOT Analysis</h2>
-  <div class="box">
-    <p class="loading">Analyzing your idea... please wait 🔄</p>
-    <pre id="swotOutput"></pre>
+  <div class="container">
+    <h2>Hi <span id="name">User</span>, here is your SWOT Analysis</h2>
+    <p><strong>Idea:</strong> <span id="idea"></span></p>
+    <div class="swot" id="swot">Loading SWOT...</div>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const name = params.get("name") || "User";
-    const idea = params.get("idea") || "your idea";
+    const name = params.get("name");
+    const idea = params.get("idea");
 
-    document.getElementById("username").textContent = name;
+    document.getElementById("name").textContent = name || "User";
+    document.getElementById("idea").textContent = idea || "your idea";
 
-    // Show dummy SWOT result — you can upgrade this to pull from Google Sheets later
-    setTimeout(() => {
-      document.querySelector(".loading").style.display = 'none';
-      document.getElementById("swotOutput").textContent = `
-[SWOT for: ${idea}]
+    // Replace this with your real SheetDB URL
+    const SHEETDB_URL = "https://sheetdb.io/api/v1/kuljjutug58ww";
 
-🔹 Strengths:
-- Innovative solution
-- Unique user experience
-
-🔹 Weaknesses:
-- Needs more user research
-- Limited initial funding
-
-🔹 Opportunities:
-- Market trend favoring this
-- Expandable to other regions
-
-🔹 Threats:
-- Competition with big players
-- Regulatory hurdles
-      `;
-    }, 3000);
+    fetch(`${SHEETDB_URL}/search?name=${encodeURIComponent(name)}&idea=${encodeURIComponent(idea)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.length > 0) {
+          document.getElementById("swot").textContent = data[0].swot;
+        } else {
+          document.getElementById("swot").textContent = "No SWOT result found.";
+        }
+      })
+      .catch(err => {
+        document.getElementById("swot").textContent = "Error loading SWOT.";
+        console.error(err);
+      });
   </script>
 </body>
 </html>
