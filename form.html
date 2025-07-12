@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>AI SWOT Analyzer Form</title></head>
+<body>
+  <h2>Submit Your Startup Idea</h2>
+  <form action="YOUR_MAKE_WEBHOOK_URL" method="post">
+    <label>Name:</label><br>
+    <input name="name" required><br><br>
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br><br>
+    <label>Idea:</label><br>
+    <textarea name="idea" rows="6" required></textarea><br><br>
+    <label>Category:</label><br>
+    <select name="category">
+      <option>EdTech</option>
+      <option>FinTech</option>
+      <option>HealthTech</option>
+      <option>Other</option>
+    </select><br><br>
+    <input type="submit" value="Analyze">
+  </form>
+</body>
+</html>
