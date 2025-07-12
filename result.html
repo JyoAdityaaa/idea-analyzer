@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SWOT Analysis Result</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h2 { color: #2c3e50; }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .loading {
+      font-size: 18px;
+      color: #666;
+    }
+    pre {
+      background: #eee;
+      padding: 10px;
+      white-space: pre-wrap;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Hey <span id="username">User</span>, here is your SWOT Analysis</h2>
+  <div class="box">
+    <p class="loading">Analyzing your idea... please wait 🔄</p>
+    <pre id="swotOutput"></pre>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("name") || "User";
+    const idea = params.get("idea") || "your idea";
+
+    document.getElementById("username").textContent = name;
+
+    // Show dummy SWOT result — you can upgrade this to pull from Google Sheets later
+    setTimeout(() => {
+      document.querySelector(".loading").style.display = 'none';
+      document.getElementById("swotOutput").textContent = `
+[SWOT for: ${idea}]
+
+🔹 Strengths:
+- Innovative solution
+- Unique user experience
+
+🔹 Weaknesses:
+- Needs more user research
+- Limited initial funding
+
+🔹 Opportunities:
+- Market trend favoring this
+- Expandable to other regions
+
+🔹 Threats:
+- Competition with big players
+- Regulatory hurdles
+      `;
+    }, 3000);
+  </script>
+</body>
+</html>
