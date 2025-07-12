@@ -59,7 +59,18 @@
 <body>
   <div class="form-box">
     <h2>Submit Your Startup Idea</h2>
-    <form onsubmit="handleSubmit(event)">
+    <form 
+      action="https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9" 
+      method="post"
+      onsubmit="setTimeout(() => {
+        const name = document.querySelector('[name=name]').value;
+        const idea = document.querySelector('[name=idea]').value;
+        const category = document.querySelector('[name=category]').value;
+        window.location.href = 'result.html?name=' + encodeURIComponent(name) + 
+                               '&idea=' + encodeURIComponent(idea) + 
+                               '&category=' + encodeURIComponent(category);
+      }, 2000);"
+    >
       <label for="name">Name:</label>
       <input type="text" name="name" required>
 
@@ -80,37 +91,5 @@
       <input type="submit" value="Analyze Idea">
     </form>
   </div>
-
-  <script>
-    function handleSubmit(event) {
-      event.preventDefault();
-
-      const form = event.target;
-      const name = form.name.value;
-      const email = form.email.value;
-      const idea = form.idea.value;
-      const category = form.category.value;
-
-      fetch('https://hook.us2.make.com/wknahpbdafomh3gcd3ykcnxpi27pp9u9', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-          name,
-          email,
-          idea,
-          category
-        })
-      })
-      .then(() => {
-        window.location.href = 'result.html?name=' + encodeURIComponent(name) + '&idea=' + encodeURIComponent(idea);
-      })
-      .catch(err => {
-        alert("Something went wrong. Please try again.");
-        console.error(err);
-      });
-    }
-  </script>
 </body>
 </html>
