@@ -50,19 +50,19 @@
     // Replace this with your real SheetDB URL
     const SHEETDB_URL = "https://sheetdb.io/api/v1/kuljjutug58ww";
 
-    fetch(`${SHEETDB_URL}/search?name=${encodeURIComponent(name)}&idea=${encodeURIComponent(idea)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.length > 0) {
-          document.getElementById("swot").textContent = data[0].swot;
-        } else {
-          document.getElementById("swot").textContent = "No SWOT result found.";
-        }
-      })
-      .catch(err => {
-        document.getElementById("swot").textContent = "Error loading SWOT.";
-        console.error(err);
-      });
+// Add this line to normalize result
+const formatSwot = data => data[0]?.swot || data[0]?.SWOT || "No SWOT found";
+
+fetch(`${SHEETDB_URL}/search?name=${encodeURIComponent(name)}&idea=${encodeURIComponent(idea)}`)
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("swot").textContent = formatSwot(data);
+  })
+  .catch(err => {
+    document.getElementById("swot").textContent = "Error loading SWOT.";
+    console.error(err);
+  });
+
   </script>
 </body>
 </html>
