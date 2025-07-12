@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>SWOT Result Viewer</title>
   <style>
     body {
@@ -16,35 +16,24 @@
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
 
     h2 {
       color: #2c3e50;
     }
 
-    .meta {
-      margin-bottom: 20px;
-      line-height: 1.6;
+    p {
+      margin-bottom: 12px;
     }
 
-    .swot-section {
-      margin-top: 20px;
-    }
-
-    .swot-section h3 {
-      margin-top: 20px;
-      background-color: #2193b0;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-    }
-
-    .swot-section p {
+    .swot {
+      margin-top: 25px;
       background: #eef;
-      padding: 10px 15px;
-      border-radius: 6px;
+      padding: 20px;
+      border-radius: 8px;
       white-space: pre-wrap;
+      line-height: 1.6;
     }
 
     .btn {
@@ -67,29 +56,13 @@
 <body>
   <div class="container" id="swot-result">
     <h2>Hi <span id="name">User</span>, here is your SWOT Analysis</h2>
-    <div class="meta">
-      <p><strong>Idea:</strong> <span id="idea"></span></p>
-      <p><strong>Category:</strong> <span id="category"></span></p>
-    </div>
-
-    <div class="swot-section">
-      <h3>Strengths</h3>
-      <p id="strengths">Loading...</p>
-
-      <h3>Weaknesses</h3>
-      <p id="weaknesses">Loading...</p>
-
-      <h3>Opportunities</h3>
-      <p id="opportunities">Loading...</p>
-
-      <h3>Threats</h3>
-      <p id="threats">Loading...</p>
-    </div>
-
+    <p><strong>Idea:</strong> <span id="idea"></span></p>
+    <p><strong>Category:</strong> <span id="category"></span></p>
+    <div class="swot" id="swot">Loading SWOT...</div>
     <button class="btn" onclick="downloadPDF()">📥 Download as PDF</button>
   </div>
 
-  <!-- html2pdf CDN -->
+  <!-- PDF Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
@@ -108,43 +81,23 @@
       .then(res => res.json())
       .then(data => {
         const swot = data[0]?.swot || data[0]?.SWOT || "No SWOT found.";
-        const lines = swot.split('\n');
-
-        // Optional: Try to detect sections
-        let s = '', w = '', o = '', t = '';
-        let section = '';
-
-        for (let line of lines) {
-          if (line.toLowerCase().startsWith('strength')) section = 's';
-          else if (line.toLowerCase().startsWith('weakness')) section = 'w';
-          else if (line.toLowerCase().startsWith('opportun')) section = 'o';
-          else if (line.toLowerCase().startsWith('threat')) section = 't';
-          else {
-            if (section === 's') s += line + '\n';
-            else if (section === 'w') w += line + '\n';
-            else if (section === 'o') o += line + '\n';
-            else if (section === 't') t += line + '\n';
-          }
-        }
-
-        document.getElementById("strengths").textContent = s.trim() || "N/A";
-        document.getElementById("weaknesses").textContent = w.trim() || "N/A";
-        document.getElementById("opportunities").textContent = o.trim() || "N/A";
-        document.getElementById("threats").textContent = t.trim() || "N/A";
+        document.getElementById("swot").textContent = swot;
       })
       .catch(err => {
-        document.getElementById("strengths").textContent = "Error loading SWOT.";
+        document.getElementById("swot").textContent = "Error loading SWOT.";
         console.error(err);
       });
 
     function downloadPDF() {
       const element = document.getElementById("swot-result");
-      html2pdf().from(element).set({
-        margin: 1,
-        filename: `SWOT_${name || 'User'}.pdf`,
-        html2canvas: { scale: 2 },
-        jsPDF: { format: 'a4', orientation: 'portrait' }
-      }).save();
+      const options = {
+        margin:       0.5,
+        filename:     `SWOT_${name || 'User'}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(options).from(element).save();
     }
   </script>
 </body>
