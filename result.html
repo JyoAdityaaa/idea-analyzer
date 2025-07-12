@@ -1,43 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SWOT Result Viewer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f7fafc;
       padding: 40px;
-      max-width: 800px;
-      margin: auto;
+      margin: 0;
+      display: flex;
+      justify-content: center;
     }
+
     .container {
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 100%;
     }
+
     h2 {
       color: #2c3e50;
+      text-align: center;
     }
+
+    p {
+      margin: 15px 0;
+      font-size: 16px;
+    }
+
     .swot {
-      margin-top: 20px;
       background: #eef;
-      padding: 15px;
+      padding: 20px;
       border-radius: 8px;
+      margin-top: 20px;
       white-space: pre-wrap;
+      font-size: 15px;
+      line-height: 1.5;
     }
+
     .btn {
-      margin-top: 25px;
-      padding: 12px 20px;
+      margin-top: 30px;
+      padding: 12px 24px;
       background-color: #2193b0;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
       font-size: 16px;
-      transition: background-color 0.3s ease;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
+
     .btn:hover {
       background-color: #1e7e96;
     }
@@ -51,28 +69,41 @@
     <button class="btn" onclick="downloadPDF()">📥 Download as PDF</button>
   </div>
 
+  <!-- PDF Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
-    const email = new URLSearchParams(window.location.search).get("email");
-    document.getElementById("email").textContent = email;
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+    document.getElementById("email").textContent = email || "Not provided";
 
     const SHEETDB_URL = "https://sheetdb.io/api/v1/kuljjutug58ww";
 
-    fetch(`${SHEETDB_URL}/search?email=${encodeURIComponent(email)}`)
-      .then(res => res.json())
-      .then(data => {
-        const swot = data[0]?.swot || data[0]?.SWOT || "No SWOT found.";
-        document.getElementById("swot").textContent = swot;
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        document.getElementById("swot").textContent = "Error loading SWOT.";
-      });
+    if (email) {
+      fetch(`${SHEETDB_URL}/search?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          const swot = data[0]?.swot || data[0]?.SWOT || "No SWOT found.";
+          document.getElementById("swot").textContent = swot;
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          document.getElementById("swot").textContent = "Error loading SWOT.";
+        });
+    } else {
+      document.getElementById("swot").textContent = "No email provided. Cannot fetch SWOT.";
+    }
 
     function downloadPDF() {
       const element = document.getElementById("swot-result");
-      html2pdf().from(element).save(`SWOT_${email}.pdf`);
+      const opt = {
+        margin:       0.5,
+        filename:     `SWOT_${email || 'user'}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
     }
   </script>
 </body>
